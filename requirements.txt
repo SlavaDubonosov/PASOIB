@@ -1,1 +1,4 @@
+greenlet==1.0.0
 psutil==5.8.0
+SQLAlchemy==1.4.7
+structlog==21.1.0
