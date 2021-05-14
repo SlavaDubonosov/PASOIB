@@ -2,7 +2,7 @@ import click
 import platform
 
 from configuration_repository import LocalConfigurationRepository
-from daemons import HardwareObserverDaemon
+from daemons import HardwareObserverDaemon, ConfigurationChanged
 from entities.configuration.hardware import HardwareConfiguration
 
 
@@ -34,7 +34,11 @@ def save_configuration():
 def run():
     saved_configuration = LocalConfigurationRepository.get('/tmp/hardware_configuration')
     hw_daemon = HardwareObserverDaemon(saved_configuration=saved_configuration)
-    hw_daemon.run()
+    try:
+        hw_daemon.run()
+    except ConfigurationChanged as e:
+        pass
+        # send alarm and logout
 
 
 cli.add_command(save_configuration)

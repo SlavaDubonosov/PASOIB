@@ -6,10 +6,11 @@ from entities.configuration.base import Configuration
 from entities.configuration.hardware import HardwareConfiguration
 
 
-class HardwareObserverDaemon(BaseModel):
-    class HardwareConfigurationChanged(Exception):
-        pass
+class ConfigurationChanged(Exception):
+    pass
 
+
+class HardwareObserverDaemon(BaseModel):
     saved_configuration: Configuration
 
     def run(self):
@@ -24,4 +25,4 @@ class HardwareObserverDaemon(BaseModel):
     def _process(self):
         actual_configuration = HardwareConfiguration()
         if not actual_configuration == self.saved_configuration:
-            raise self.HardwareConfigurationChanged()
+            raise ConfigurationChanged('Hardware')
