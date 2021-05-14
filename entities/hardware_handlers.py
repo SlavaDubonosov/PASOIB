@@ -1,53 +1,52 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass
 
 
 @dataclass
-class Device(ABC):
+class Hardware(ABC):
     data: dict[str, str]
 
     @classmethod
-    def init(cls, raw_data) -> 'Device':
+    def init(cls, raw_data) -> 'Hardware':
         return cls(raw_data)
 
-    @abstractmethod
-    def get_name(self):
+    def get_name(self) -> str:
         ...
 
 
-class Unknown(Device):
-    def get_name(self):
+class Unknown(Hardware):
+    def get_name(self) -> str:
         return self.data.get('product', 'Unknown')
 
 
-class Memory(Device):
-    def get_name(self):
+class Memory(Hardware):
+    def get_name(self) -> str:
         return self.data['description']
 
 
-class Processor(Device):
-    def get_name(self):
+class Processor(Hardware):
+    def get_name(self) -> str:
         return self.data['product']
 
 
-class Bridge(Device):
-    def get_name(self):
+class Bridge(Hardware):
+    def get_name(self) -> str:
         return self.data['product']
 
 
-class Generic(Device):
-    def get_name(self):
+class Generic(Hardware):
+    def get_name(self) -> str:
         return self.data['product']
 
 
-class System(Device):
-    def get_name(self):
+class System(Hardware):
+    def get_name(self) -> str:
         return self.data['product']
 
 
-class USB(Device):
+class USB(Hardware):
     @classmethod
-    def init(cls, raw_data) -> 'USB':
+    def init(cls, raw_data: bytes) -> 'USB':
         parts = raw_data.decode().split()
         data = {
             parts[0]: parts[1],
@@ -57,12 +56,12 @@ class USB(Device):
         }
         return cls(data)
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self.data['name']
 
 
-class Devices:
-    DEVICES_MAP = {
+class HardwareEntities:
+    HARDWARES_MAP = {
         'memory': Memory,
         'processor': Processor,
         'bridge': Bridge,
@@ -71,15 +70,9 @@ class Devices:
     }
 
     @classmethod
-    def get_device(cls, data):
+    def get_hardware(cls, data: dict[str, str]) -> Hardware:
         class_ = data['class']
-        device_class = cls.DEVICES_MAP.get(class_, Unknown)
-        device = device_class.init(data)
+        hardware_class = cls.HARDWARES_MAP.get(class_, Unknown)
+        hardware = hardware_class.init(data)
 
-        return device
-
-    @classmethod
-    def get_name(cls, data):
-        device = cls.get_device(data)
-
-        return device.get_name()
+        return hardware

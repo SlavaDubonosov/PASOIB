@@ -1,6 +1,6 @@
 import platform
 
-from hardware_configuration import HardwareConfiguration
+from configuration.hardware import HardwareConfiguration
 
 
 def print_system_info():
@@ -20,5 +20,5 @@ def get_software_list():
 
 if __name__ == '__main__':
     print_system_info()
-    for device in HardwareConfiguration().devices:
+    for device in HardwareConfiguration().items:
         print(device)
