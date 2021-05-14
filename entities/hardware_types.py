@@ -5,8 +5,9 @@ class Hardware(BaseModel):
     id: str
     physid: str
     vendor: str = ''
-    product: str = 'Unknown'
     description: str = ''
+    product: str = 'unknown'
+    class_: str = 'unknown'
 
     def get_name(self) -> str:
         return self.product
@@ -17,7 +18,7 @@ class Unknown(Hardware):
 
 
 class Memory(Hardware):
-    class_: str = 'Memory'
+    class_: str = 'memory'
 
     def get_name(self) -> str:
         return self.description
@@ -25,21 +26,21 @@ class Memory(Hardware):
 
 class Processor(Hardware):
     businfo: str
-    class_: str = 'Processor'
+    class_: str = 'processor'
 
 
 class Bridge(Hardware):
     handle: str
-    class_: str = 'Bridge'
+    class_: str = 'bridge'
 
 
 class Generic(Hardware):
     handle: str
-    class_: str = 'Generic'
+    class_: str = 'generic'
 
 
 class System(Hardware):
-    class_: str = 'System'
+    class_: str = 'system'
 
 
 class USB(BaseModel):
@@ -47,7 +48,7 @@ class USB(BaseModel):
     device: str
     id: str
     name: str
-    class_: str = 'USB'
+    class_: str = 'usb'
 
     @classmethod
     def init(cls, raw_data: bytes) -> 'USB':

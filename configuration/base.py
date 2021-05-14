@@ -1,5 +1,9 @@
+from typing import Any
+
 from pydantic import BaseModel
 
 
 class Configuration(BaseModel):
-    pass
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]):
+        pass

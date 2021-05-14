@@ -1,32 +1,32 @@
+import json
+
 from configuration.base import Configuration
+from configuration.hardware import HardwareConfiguration
 
 
 class ConfigurationRepository:
     """Class for abstraction on place, where Configuration must be stored"""
 
-    def set(self, conf: Configuration) -> None:
+    @classmethod
+    def set(cls, key: str, conf: Configuration) -> None:
         ...
 
-    def get(self) -> Configuration:
+    @classmethod
+    def get(cls, key: str) -> Configuration:
         ...
 
 
 class LocalConfigurationRepository(ConfigurationRepository):
     """Class to store configuration in local storage"""
 
-    def set(self, conf: Configuration) -> None:
-        ...
+    @classmethod
+    def set(cls, key: str, conf: Configuration) -> None:
+        with open(key, 'w') as f:
+            f.write(conf.json())
 
-    def get(self) -> Configuration:
-        ...
-
-
-class RemoteConfigurationRepository(ConfigurationRepository):
-    """Class to store configuration in remote storage"""
-
-    def set(self, conf: Configuration) -> None:
-        ...
-
-    def get(self) -> Configuration:
-        ...
-
+    @classmethod
+    def get(cls, key: str) -> Configuration:
+        with open(key, 'r') as f:
+            return HardwareConfiguration.from_dict(
+                json.loads(f.read())
+            )

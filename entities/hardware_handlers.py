@@ -11,8 +11,8 @@ class HardwareEntities:
     }
 
     @classmethod
-    def get_entities(cls, data: dict[str, str]) -> Hardware:
-        class_ = data['class']
+    def get_entity(cls, data: dict[str, str]) -> Hardware:
+        class_ = data.get('class') or data.get('class_')
         hardware_class = cls.HARDWARES_MAP.get(class_, Unknown)
         hardware = hardware_class(**data)
 

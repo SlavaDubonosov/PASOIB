@@ -1,5 +1,6 @@
 import json
 import subprocess
+from typing import Any, Optional
 
 from configuration.base import Configuration
 from entities.hardware_handlers import HardwareEntities
@@ -9,11 +10,32 @@ from entities.hardware_types import Hardware, USB
 class HardwareConfiguration(Configuration):
     hardware: list[Hardware] = None
     usb: list[USB] = None
+    class_: str = 'HardwareConfiguration'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        hardware: Optional[list[dict[str, Any]]] = None,
+        usb: Optional[list[dict[str, Any]]] = None,
+        *args,
+        **kwargs,
+    ) -> None:
         super().__init__(*args, **kwargs)
-        self.hardware = list(self._get_hardware())
-        self.usb = list(self._get_usb())
+        if not hardware:
+            self.hardware = list(self._get_hardware())
+        else:
+            self.hardware = [
+                HardwareEntities.get_entity(hw)
+                for hw in hardware
+            ]
+
+        if not usb:
+            self.usb = list(self._get_usb())
+        else:
+            self.usb = [USB(**u) for u in usb]
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]):
+        return cls(**data)
 
     @staticmethod
     def _get_hardware() -> list[Hardware]:
@@ -24,7 +46,7 @@ class HardwareConfiguration(Configuration):
         hardware_info = json.loads(lshw_output_in_json.stdout)
         for child in hardware_info.get('children', []):
             for subchild in child.get('children', []):
-                yield HardwareEntities.get_entities(subchild)
+                yield HardwareEntities.get_entity(subchild)
 
     @staticmethod
     def _get_usb() -> list[USB]:
