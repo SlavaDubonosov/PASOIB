@@ -1,4 +1,4 @@
-from configuration.base import Configuration
+from entities.configuration.base import Configuration
 from entities.software_handlers import Software
 
 

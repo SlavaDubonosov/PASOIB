@@ -2,7 +2,7 @@ import json
 import subprocess
 from typing import Any, Optional
 
-from configuration.base import Configuration
+from entities.configuration.base import Configuration
 from entities.hardware_handlers import HardwareEntities
 from entities.hardware_types import Hardware, USB
 

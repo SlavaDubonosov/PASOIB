@@ -1,8 +1,10 @@
 import click
 import platform
 
-from configuration.hardware import HardwareConfiguration
 from configuration_repository import LocalConfigurationRepository
+from daemons import HardwareObserverDaemon
+from entities.configuration.hardware import HardwareConfiguration
+
 
 def print_system_info():
     print('=' * 40, 'System Information', '=' * 40)
@@ -31,9 +33,8 @@ def save_configuration():
 @click.command()
 def run():
     saved_configuration = LocalConfigurationRepository.get('/tmp/hardware_configuration')
-    actual_configuration = HardwareConfiguration()
-    print(saved_configuration)
-    print(actual_configuration)
+    hw_daemon = HardwareObserverDaemon(saved_configuration=saved_configuration)
+    hw_daemon.run()
 
 
 cli.add_command(save_configuration)

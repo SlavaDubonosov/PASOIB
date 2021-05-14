@@ -1,7 +1,7 @@
 import json
 
-from configuration.base import Configuration
-from configuration.hardware import HardwareConfiguration
+from entities.configuration.base import Configuration
+from entities.configuration.hardware import HardwareConfiguration
 
 
 class ConfigurationRepository:
