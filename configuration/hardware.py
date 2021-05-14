@@ -2,18 +2,21 @@ import json
 import subprocess
 
 from configuration.base import Configuration
-from entities.hardware_handlers import Hardware, HardwareEntities, USB
+from entities.hardware_handlers import HardwareEntities
+from entities.hardware_types import Hardware, USB
 
 
 class HardwareConfiguration(Configuration):
-    @property
-    def items(self) -> list[Hardware]:
-        hardware_devices = list(self._get_hardware_list())
-        usb_devices = list(self._get_usb_list())
+    hardware: list[Hardware] = None
+    usb: list[USB] = None
 
-        return hardware_devices + usb_devices
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.hardware = list(self._get_hardware())
+        self.usb = list(self._get_usb())
 
-    def _get_hardware_list(self) -> list[Hardware]:
+    @staticmethod
+    def _get_hardware() -> list[Hardware]:
         lshw_output_in_json = subprocess.run(
             ['lshw', '-json'],
             stdout=subprocess.PIPE
@@ -21,10 +24,10 @@ class HardwareConfiguration(Configuration):
         hardware_info = json.loads(lshw_output_in_json.stdout)
         for child in hardware_info.get('children', []):
             for subchild in child.get('children', []):
+                yield HardwareEntities.get_entities(subchild)
 
-                yield HardwareEntities.get_hardware(subchild)
-
-    def _get_usb_list(self) -> list[USB]:
+    @staticmethod
+    def _get_usb() -> list[USB]:
         lsusb_str_list = subprocess.run(
             ['lsusb'],
             stdout=subprocess.PIPE

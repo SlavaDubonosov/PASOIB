@@ -1,10 +1,5 @@
-from typing import Any
+from pydantic import BaseModel
 
 
-class Configuration:
-    @property
-    def items(self) -> list[Any]:
-        return []
-
-    def as_dict(self) -> dict[str, Any]:
-        ...
+class Configuration(BaseModel):
+    pass

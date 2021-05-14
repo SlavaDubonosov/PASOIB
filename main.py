@@ -14,11 +14,7 @@ def print_system_info():
     print(f'Processor: {uname.processor}')
 
 
-def get_software_list():
-    pass
-
-
 if __name__ == '__main__':
     print_system_info()
-    for device in HardwareConfiguration().items:
-        print(device)
+    configuration = HardwareConfiguration()
+    print(configuration.dict())
