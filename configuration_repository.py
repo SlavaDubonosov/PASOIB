@@ -1,5 +1,6 @@
 import json
 
+from entities.configuration import SoftwareConfiguration
 from entities.configuration.base import Configuration
 from entities.configuration.hardware import HardwareConfiguration
 
@@ -27,6 +28,11 @@ class LocalConfigurationRepository(ConfigurationRepository):
     @classmethod
     def get(cls, key: str) -> Configuration:
         with open(key, 'r') as f:
-            return HardwareConfiguration.from_dict(
-                json.loads(f.read())
-            )
+            data = json.loads(f.read())
+            configuration_class = data.get('class_')
+            if configuration_class == 'HardwareConfiguration':
+                return HardwareConfiguration(**data)
+            elif configuration_class == 'SoftwareConfiguration':
+                return SoftwareConfiguration(**data)
+            else:
+                raise Exception

@@ -33,10 +33,6 @@ class HardwareConfiguration(Configuration):
         else:
             self.usb = [USB(**u) for u in usb]
 
-    @classmethod
-    def from_dict(cls, data: dict[str, Any]):
-        return cls(**data)
-
     @staticmethod
     def _get_hardware() -> list[Hardware]:
         lshw_output_in_json = subprocess.run(

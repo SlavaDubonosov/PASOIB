@@ -1,17 +1,18 @@
 import time
+from typing import Callable
 
 from pydantic import BaseModel
 
 from entities.configuration.base import Configuration
-from entities.configuration.hardware import HardwareConfiguration
 
 
 class ConfigurationChanged(Exception):
     pass
 
 
-class HardwareObserverDaemon(BaseModel):
+class ObserverDaemon(BaseModel):
     saved_configuration: Configuration
+    configuration_getter: Callable[[], Configuration]
 
     def run(self):
         while not self._need_to_stop:
@@ -23,6 +24,6 @@ class HardwareObserverDaemon(BaseModel):
         return False
 
     def _process(self):
-        actual_configuration = HardwareConfiguration()
+        actual_configuration = self.configuration_getter()
         if not actual_configuration == self.saved_configuration:
-            raise ConfigurationChanged('Hardware')
+            raise ConfigurationChanged(self.configuration_getter.__name__)

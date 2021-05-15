@@ -2,4 +2,6 @@ from pydantic import BaseModel
 
 
 class Software(BaseModel):
-    pass
+    name: str
+    version: str
+    class_: str = 'software'
