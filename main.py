@@ -4,6 +4,7 @@ import platform
 from configuration_repository import LocalConfigurationRepository
 from daemons import HardwareObserverDaemon, ConfigurationChanged
 from entities.configuration.hardware import HardwareConfiguration
+from entities.configuration.software import SoftwareConfiguration
 
 
 def print_system_info():
@@ -23,10 +24,18 @@ def cli():
 
 
 @click.command()
-def save_configuration():
+def save_hardware_configuration():
     LocalConfigurationRepository.set(
         '/tmp/hardware_configuration',
         HardwareConfiguration()
+    )
+
+
+@click.command()
+def save_software_configuration():
+    LocalConfigurationRepository.set(
+        '/tmp/software_configuration',
+        SoftwareConfiguration()
     )
 
 
@@ -41,7 +50,8 @@ def run():
         # send alarm and logout
 
 
-cli.add_command(save_configuration)
+cli.add_command(save_hardware_configuration)
+cli.add_command(save_software_configuration)
 cli.add_command(run)
 
 if __name__ == '__main__':
